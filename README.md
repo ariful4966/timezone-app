@@ -58,3 +58,8 @@ We will use a click object for local clock. And use an array of clocks for other
 - [ ] filter events by clock
 - [ ] get event by id
 - [ ] get events by ids
+
+
+### Project Diagram
+
+[Timezone Track Application UML Diagram](https://drive.google.com/file/d/14MUg6cc2ccrUzvcYwaZfXs-26qy94-hf/view?usp=sharing)
