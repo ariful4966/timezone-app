@@ -1,52 +1,45 @@
 import { addMinutes } from "date-fns";
 import { useEffect, useState } from "react";
+import { TIMEZONE_OFFSET } from "../constants/timezone";
 
-const init = {
-  id: "",
-  title: "",
-  timezone: {
-    type: "",
-    offset: "",
-  },
-  date_utc: null,
-  date: null,
-};
 
-const TIMEZONE_OFFSET = {
-  PST: -7 * 60,
-  EST: -4 * 60,
-  EAT: 3 * 60,
-};
 
-const useClock = (timezone, offset=0) => {
-  const [state, setState] = useState({ ...init });
+const useClock = (timezone, offset) => {
+  const [localDate, setLocalDate] = useState(null);
+  const [localOffset, setLocalOffset] = useState(0);
+  const [localTimezone, setLocalTimezone] = useState("");
   const [utc, setUTC] = useState(null);
 
   useEffect(() => {
     let d = new Date();
-    const localOffset = d.getTimezoneOffset();
+    const loOffset = d.getTimezoneOffset();
     d = addMinutes(d, localOffset);
     setUTC(d);
+    setLocalOffset(loOffset);
   }, []);
 
-  useEffect(()=>{
-    if(utc !== null && timezone){
-        offset= TIMEZONE_OFFSET[timezone] ?? offset;
+  useEffect(() => {
+  
+    if (utc !== null) {
+      if (timezone) {
+        offset = TIMEZONE_OFFSET[timezone] ?? offset;
 
-        const newUtc = addMinutes(utc, offset);
-        setState({
-            ...state,
-            date_utc: utc,
-            date: newUtc
-        })
-    }else{
-        
-        setState({...state, date_utc: utc, date: utc})
+       const newUtc = addMinutes(utc, offset);
+        setLocalDate(newUtc);
+      } else {
+       const newUtc = addMinutes(utc, -localOffset);
+        const dateArr = newUtc.toUTCString().split(" ");
+        setLocalDate(newUtc);
+        setLocalTimezone(dateArr.pop());
+      }
     }
-  }, [utc])
+  }, [utc, timezone, offset]);
 
   return {
-    clock: state,
+    date: localDate,
+    dateUTC: utc,
+    offset: offset || -localOffset,
+    timezone: timezone || localTimezone,
   };
 };
 

@@ -1,25 +1,31 @@
+import ClockList from "./components/ClockList";
+import LocalClock from "./components/LocalClock";
 
-import LocalClock from './components/LocalClock'
-import ClockList from './components/ClockList'
-import useClock from './hooks/useClock'
+import { useState } from "react";
+
+const LOCAL_CLOCK_INIT = {
+  title: "My Clock",
+  timezone: "",
+  offset: 0,
+  date: null,
+};
 
 function App() {
+  const [localClock, setLocalClock] = useState({ ...LOCAL_CLOCK_INIT });
 
+  const updateClock = (data) => {
+    setLocalClock({
+      ...localClock,
+      ...data,
+    });
+  };
 
-  const {clock: local}=useClock("UTC", 6*60);
-  const {clock: pst}=useClock('PST')
-  const {clock: est}=useClock('EST')
-  const {clock: pakistan}=useClock('UTC', 5*60)
- console.log('Local UTC', local.date)
- console.log('Local PST', pst.date)
- console.log('Local EST', est.date)
- console.log('Local Pakistan', pakistan.date)
   return (
     <div>
-     <LocalClock/>
-     <ClockList/>
+      <LocalClock clock={localClock} updateClock={updateClock} />
+      <ClockList />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
