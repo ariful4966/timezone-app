@@ -7,17 +7,7 @@ const defaultOffsets = [
 
 const ClockAction = ({ local = false, clock, updateClock }) => {
   const [isEdit, setIsEdit] = useState(false);
-  const handleChange = (e) => {
-    let { name, value } = e.target;
 
-    if (name === "offset") {
-      value = parseInt(value) * 60;
-    }
-
-    updateClock({
-      [name]: value,
-    });
-  };
   const handleClock = (values) => {
     console.log(values);
   };
